@@ -1,0 +1,827 @@
+{
+	"status": {},
+	"contains_secrets": false,
+	"product_version": "3.2.0",
+	"spec": {
+		"description": "",
+		"resources": {
+			"client_attrs": {
+				"b6197796_deployment": {
+					"y": -1135.1918601354,
+					"x": 348.1612300199
+				}
+			},
+			"service_definition_list": [{
+				"singleton": false,
+				"action_list": [{
+					"description": "System action for creating an application",
+					"type": "system",
+					"critical": false,
+					"runbook": {
+						"task_definition_list": [{
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [{
+								"kind": "app_task",
+								"name": "ConfigureBaseVM"
+							}, {
+								"kind": "app_task",
+								"name": "ConfigureHostsFile"
+							}, {
+								"kind": "app_task",
+								"name": "InstallOracleDependencies"
+							}, {
+								"kind": "app_task",
+								"name": "SetOraclePassword"
+							}, {
+								"kind": "app_task",
+								"name": "PrepareSource"
+							}, {
+								"kind": "app_task",
+								"name": "PrepareResponse"
+							}, {
+								"kind": "app_task",
+								"name": "CreateDirectoryStructure"
+							}, {
+								"kind": "app_task",
+								"name": "InstallOracle"
+							}, {
+								"kind": "app_task",
+								"name": "PostInstallRootSh"
+							}],
+							"name": "988d9447_dag",
+							"attrs": {
+								"edges": [{
+									"from_task_reference": {
+										"kind": "app_task",
+										"name": "ConfigureBaseVM"
+									},
+									"edge_type": "user_defined",
+									"type": "",
+									"to_task_reference": {
+										"kind": "app_task",
+										"name": "ConfigureHostsFile"
+									}
+								}, {
+									"from_task_reference": {
+										"kind": "app_task",
+										"name": "ConfigureHostsFile"
+									},
+									"edge_type": "user_defined",
+									"type": "",
+									"to_task_reference": {
+										"kind": "app_task",
+										"name": "InstallOracleDependencies"
+									}
+								}, {
+									"from_task_reference": {
+										"kind": "app_task",
+										"name": "InstallOracleDependencies"
+									},
+									"edge_type": "user_defined",
+									"type": "",
+									"to_task_reference": {
+										"kind": "app_task",
+										"name": "SetOraclePassword"
+									}
+								}, {
+									"from_task_reference": {
+										"kind": "app_task",
+										"name": "PrepareSource"
+									},
+									"edge_type": "user_defined",
+									"type": "",
+									"to_task_reference": {
+										"kind": "app_task",
+										"name": "PrepareResponse"
+									}
+								}, {
+									"from_task_reference": {
+										"kind": "app_task",
+										"name": "PrepareResponse"
+									},
+									"edge_type": "user_defined",
+									"type": "",
+									"to_task_reference": {
+										"kind": "app_task",
+										"name": "CreateDirectoryStructure"
+									}
+								}, {
+									"from_task_reference": {
+										"kind": "app_task",
+										"name": "CreateDirectoryStructure"
+									},
+									"edge_type": "user_defined",
+									"type": "",
+									"to_task_reference": {
+										"kind": "app_task",
+										"name": "InstallOracle"
+									}
+								}, {
+									"from_task_reference": {
+										"kind": "app_task",
+										"name": "InstallOracle"
+									},
+									"edge_type": "user_defined",
+									"type": "",
+									"to_task_reference": {
+										"kind": "app_task",
+										"name": "PostInstallRootSh"
+									}
+								}, {
+									"from_task_reference": {
+										"kind": "app_task",
+										"name": "SetOraclePassword"
+									},
+									"edge_type": "user_defined",
+									"type": "",
+									"to_task_reference": {
+										"kind": "app_task",
+										"name": "PrepareSource"
+									}
+								}],
+								"type": ""
+							},
+							"timeout_secs": "0",
+							"type": "DAG",
+							"variable_list": []
+						}, {
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "ConfigureBaseVM",
+							"attrs": {
+								"exit_status": [],
+								"script": "#!\/bin\/sh\n\n# make sure all base packages are updated\nsudo yum -y update\n\n# set the hostname as per the deployment settings\nsudo hostnamectl set-hostname @@{HOSTNAME}@@-@@{calm_array_index}@@",
+								"script_type": "sh",
+								"type": "",
+								"command_line_args": "",
+								"login_credential_local_reference": {
+									"kind": "app_credential",
+									"name": "root"
+								}
+							},
+							"timeout_secs": "0",
+							"type": "EXEC",
+							"variable_list": []
+						}, {
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "ConfigureHostsFile",
+							"attrs": {
+								"exit_status": [],
+								"script": "#!\/bin\/sh\n\n# make sure the hostname and IP address are in the local hosts file\n# this is mandatory for a single instance Oracle deployment\necho \"\n@@{address}@@ @@{HOSTNAME}@@\" | sudo tee -a \/etc\/hosts",
+								"script_type": "sh",
+								"type": "",
+								"command_line_args": "",
+								"login_credential_local_reference": {
+									"kind": "app_credential",
+									"name": "root"
+								}
+							},
+							"timeout_secs": "0",
+							"type": "EXEC",
+							"variable_list": []
+						}, {
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "InstallOracleDependencies",
+							"attrs": {
+								"exit_status": [],
+								"script": "#!\/bin\/sh\n\n# install the Oracle dependencies\n# this is easy on Oracle Linux but requires some tinkering on other distributions\n# this will also create a user called 'oracle' and groups called 'oinstall' & 'dba'\nsudo yum install -y oracle-database-preinstall-19c",
+								"script_type": "sh",
+								"type": "",
+								"command_line_args": "",
+								"login_credential_local_reference": {
+									"kind": "app_credential",
+									"name": "root"
+								}
+							},
+							"timeout_secs": "0",
+							"type": "EXEC",
+							"variable_list": []
+						}, {
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "SetOraclePassword",
+							"attrs": {
+								"exit_status": [],
+								"script": "#!\/bin\/sh\n\n# set the password for the 'oracle' user\nsudo echo \"oracle:@@{ORACLE_USER_PASSWORD}@@\" | chpasswd\n\nsudo echo \"SELINUX=permissive\" | sudo tee -a \/etc\/sysconfig\/selinx\nsetenforce Permissive\n\n\n#disable firewall \nsystemctl stop firewalld\nsystemctl disable firewalld",
+								"script_type": "sh",
+								"type": "",
+								"command_line_args": "",
+								"login_credential_local_reference": {
+									"kind": "app_credential",
+									"name": "root"
+								}
+							},
+							"timeout_secs": "0",
+							"type": "EXEC",
+							"variable_list": []
+						}, {
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "PrepareSource",
+							"attrs": {
+								"exit_status": [],
+								"script": "#!\/bin\/sh\n\n# create the folder that will provide access to the mounted source files\nsudo mkdir \/u01\nsudo mount \/dev\/sdb \/u01\n\nmkdir -p \/u01\/app\/oraInventory\n\ncd \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\nunzip LINUX.X64_193000_db_home.zip\n\n\n",
+								"script_type": "sh",
+								"type": "",
+								"command_line_args": "",
+								"login_credential_local_reference": {
+									"kind": "app_credential",
+									"name": "root"
+								}
+							},
+							"timeout_secs": "0",
+							"type": "EXEC",
+							"variable_list": []
+						}, {
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "PrepareResponse",
+							"attrs": {
+								"exit_status": [],
+								"script": "#!\/bin\/sh\n\n# set all required variables in the Oracle install response file\nsudo sed -i -- 's\/oracle\\.install\\.option.*\/oracle\\.install\\.option=INSTALL_DB_SWONLY\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/UNIX_GROUP_NAME.*\/UNIX_GROUP_NAME=oinstall\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/INVENTORY_LOCATION.*\/INVENTORY_LOCATION=\\\/u01\\\/app\\\/oraInventory\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/ORACLE_HOME.*\/ORACLE_HOME=\\\/u01\\\/app\\\/oracle\\\/product\\\/19.0.0\\\/dbhome_1\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/ORACLE_BASE.*\/ORACLE_BASE=\\\/u01\\\/app\\\/oracle\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/oracle\\.install\\.db\\.InstallEdition.*\/oracle\\.install\\.db\\.InstallEdition=EE\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/oracle\\.install\\.db\\.OSDBA_GROUP.*\/oracle\\.install\\.db\\.OSDBA_GROUP=oinstall\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/oracle\\.install\\.db\\.OSOPER_GROUP.*\/oracle\\.install\\.db\\.OSOPER_GROUP=oinstall\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/oracle\\.install\\.db\\.OSBACKUPDBA_GROUP.*\/oracle\\.install\\.db\\.OSBACKUPDBA_GROUP=oinstall\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/oracle\\.install\\.db\\.OSDGDBA_GROUP.*\/oracle\\.install\\.db\\.OSDGDBA_GROUP=oinstall\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/oracle\\.install\\.db\\.OSKMDBA_GROUP.*\/oracle\\.install\\.db\\.OSKMDBA_GROUP=oinstall\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo sed -i -- 's\/oracle\\.install\\.db\\.OSRACDBA_GROUP.*\/oracle\\.install\\.db\\.OSRACDBA_GROUP=oinstall\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\n\nsudo sed -i -- 's\/oracle\\.install\\.db\\.rootconfig\\.executeRootScript.*\/oracle\\.install\\.db\\.rootconfig\\.executeRootScript=false\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\n\n\n#sudo sed -i -- 's\/SECURITY_UPDATES_VIA_MYORACLESUPPORT.*\/SECURITY_UPDATES_VIA_MYORACLESUPPORT=false\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\n#sudo sed -i -- 's\/DECLINE_SECURITY_UPDATES.*\/DECLINE_SECURITY_UPDATES=true\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\n#sudo sed -i -- 's\/SELECTED_LANGUAGES.*\/SELECTED_LANGUAGES=en,fr\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\n#sudo sed -i -- 's\/oracle\\.install\\.db\\.isCustomInstall.*\/oracle\\.install\\.db\\.isCustomInstall=false\/' \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\n",
+								"script_type": "sh",
+								"type": "",
+								"command_line_args": "",
+								"login_credential_local_reference": {
+									"kind": "app_credential",
+									"name": "root"
+								}
+							},
+							"timeout_secs": "0",
+							"type": "EXEC",
+							"variable_list": []
+						}, {
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "CreateDirectoryStructure",
+							"attrs": {
+								"exit_status": [],
+								"script": "#!\/bin\/sh\n\n# create the directory structure required to support this Oracle installation\n\n\n\nsudo chown -R oracle:oinstall \/u01\nsudo chown -R oracle:oinstall \/u01\/app\/oracle\nsudo chown -R oracle:oinstall \/u01\/app\/oraInventory\nsudo chmod -R 775 \/u01\/app\n",
+								"script_type": "sh",
+								"type": "",
+								"command_line_args": "",
+								"login_credential_local_reference": {
+									"kind": "app_credential",
+									"name": "root"
+								}
+							},
+							"timeout_secs": "0",
+							"type": "EXEC",
+							"variable_list": []
+						}, {
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "InstallOracle",
+							"attrs": {
+								"exit_status": [],
+								"script": "#!\/bin\/sh\n\n# with the response file, directory structure and source files prepared, we can install the Oracle application\n# note that this process does not create any databases - we will do that later\n\n#.\/runInstaller -executePrereqs -silent -responseFile \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp\nsudo -u oracle \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/runInstaller -silent -waitforcompletion -responseFile \/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/install\/response\/db_install.rsp || true",
+								"script_type": "sh",
+								"type": "",
+								"command_line_args": "",
+								"login_credential_local_reference": {
+									"kind": "app_credential",
+									"name": "root"
+								}
+							},
+							"timeout_secs": "0",
+							"type": "EXEC",
+							"variable_list": []
+						}, {
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "PostInstallRootSh",
+							"attrs": {
+								"exit_status": [],
+								"script": "#!\/bin\/sh\n\n# the final step in the installation is to run the post-install *ROOT* only script\n# in Calm, we want this to happen only after the Oracle database software has finished installing, which can take some time\n# every 15 seconds, check to see if all 'oui' processes have finished\n# if there's a single instance of 'oui' in the ps results, the installation has finished (the single instance is the ps grep command itself)\nCOUNT=0\nwhile [ $COUNT != 1 ]\ndo\n        COUNT=`sudo ps -aef | grep oui | wc | awk '{print $1;}'`\n        echo \"$COUNT oui processes found i.e. Oracle software install is still running ... will check again in 15 seconds ...\"\n        sleep 15\ndone\n\n# all oui processes have finished - we can now run the post-install root script\n\n#source \/home\/oracle\/.bash_profile\n#$ORACLE_HOME\/root.sh\n#sudo -u oracle \/u01\/app\/oraInventory\/orainstRoot.sh\n\n\/u01\/app\/oracle\/product\/19.0.0\/dbhome_1\/root.sh\n\/u01\/app\/oraInventory\/orainstRoot.sh\n",
+								"script_type": "sh",
+								"type": "",
+								"command_line_args": "",
+								"login_credential_local_reference": {
+									"kind": "app_credential",
+									"name": "root"
+								}
+							},
+							"timeout_secs": "0",
+							"type": "EXEC",
+							"variable_list": []
+						}],
+						"description": "",
+						"name": "3e40debf_runbook",
+						"main_task_local_reference": {
+							"kind": "app_task",
+							"name": "988d9447_dag"
+						},
+						"variable_list": []
+					},
+					"name": "action_create"
+				}, {
+					"description": "System action for deleting an application. Deletes created VMs as well",
+					"type": "system",
+					"critical": false,
+					"runbook": {
+						"task_definition_list": [{
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "29530501_dag",
+							"attrs": {
+								"edges": [],
+								"type": ""
+							},
+							"timeout_secs": "0",
+							"type": "DAG",
+							"variable_list": []
+						}],
+						"description": "",
+						"name": "5f900e7f_runbook",
+						"main_task_local_reference": {
+							"kind": "app_task",
+							"name": "29530501_dag"
+						},
+						"variable_list": []
+					},
+					"name": "action_delete"
+				}, {
+					"description": "System action for starting an application",
+					"type": "system",
+					"critical": false,
+					"runbook": {
+						"task_definition_list": [{
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "8fd091fe_dag",
+							"attrs": {
+								"edges": [],
+								"type": ""
+							},
+							"timeout_secs": "0",
+							"type": "DAG",
+							"variable_list": []
+						}],
+						"description": "",
+						"name": "eea2be4c_runbook",
+						"main_task_local_reference": {
+							"kind": "app_task",
+							"name": "8fd091fe_dag"
+						},
+						"variable_list": []
+					},
+					"name": "action_start"
+				}, {
+					"description": "System action for stopping an application",
+					"type": "system",
+					"critical": false,
+					"runbook": {
+						"task_definition_list": [{
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "f5c08e2d_dag",
+							"attrs": {
+								"edges": [],
+								"type": ""
+							},
+							"timeout_secs": "0",
+							"type": "DAG",
+							"variable_list": []
+						}],
+						"description": "",
+						"name": "a7679ee6_runbook",
+						"main_task_local_reference": {
+							"kind": "app_task",
+							"name": "f5c08e2d_dag"
+						},
+						"variable_list": []
+					},
+					"name": "action_stop"
+				}, {
+					"description": "System action for restarting an application",
+					"type": "system",
+					"critical": false,
+					"runbook": {
+						"task_definition_list": [{
+							"target_any_local_reference": {
+								"kind": "app_service",
+								"name": "OracleService"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "e19da565_dag",
+							"attrs": {
+								"edges": [],
+								"type": ""
+							},
+							"timeout_secs": "0",
+							"type": "DAG",
+							"variable_list": []
+						}],
+						"description": "",
+						"name": "9849ab0c_runbook",
+						"main_task_local_reference": {
+							"kind": "app_task",
+							"name": "e19da565_dag"
+						},
+						"variable_list": []
+					},
+					"name": "action_restart"
+				}],
+				"depends_on_list": [],
+				"name": "OracleService",
+				"port_list": [],
+				"tier": "",
+				"variable_list": [],
+				"description": ""
+			}],
+			"substrate_definition_list": [{
+				"description": "",
+				"action_list": [],
+				"type": "AHV_VM",
+				"name": "OracleSubstrate",
+				"readiness_probe": {
+					"connection_type": "SSH",
+					"retries": "5",
+					"connection_protocol": "",
+					"connection_port": 22,
+					"address": "@@{platform.status.resources.nic_list[0].ip_endpoint_list[0].ip}@@",
+					"delay_secs": "0",
+					"disable_readiness_probe": false,
+					"login_credential_local_reference": {
+						"kind": "app_credential",
+						"name": "root"
+					}
+				},
+				"editables": {
+					"create_spec": {
+						"resources": {
+							"nic_list": {},
+							"disk_list": {}
+						}
+					}
+				},
+				"os_type": "Linux",
+				"create_spec": {
+					"name": "OracleVM-@@{calm_array_index}@@",
+					"resources": {
+						"nic_list": [{
+							"nic_type": "NORMAL_NIC",
+							"ip_endpoint_list": [],
+							"network_function_chain_reference": null,
+							"network_function_nic_type": "INGRESS",
+							"mac_address": "",
+							"subnet_reference": {
+								"kind": "subnet",
+								"type": "",
+								"name": "",
+								"uuid": "6a0019eb-4dbb-4d91-8819-745282a18849"
+							},
+							"type": ""
+						}],
+						"serial_port_list": [],
+						"guest_tools": null,
+						"num_vcpus_per_socket": 1,
+						"num_sockets": 4,
+						"gpu_list": [],
+						"memory_size_mib": 16384,
+						"parent_reference": null,
+						"hardware_clock_timezone": "",
+						"guest_customization": null,
+						"power_state": "ON",
+						"type": "",
+						"account_uuid": "b7556c7f-aa97-4218-9b7d-dab386441fbe",
+						"boot_config": {
+							"boot_device": {
+								"type": "",
+								"disk_address": {
+									"type": "",
+									"device_index": 0,
+									"adapter_type": "SCSI"
+								}
+							},
+							"type": "",
+							"boot_type": "",
+							"mac_address": ""
+						},
+						"disk_list": [{
+							"data_source_reference": {
+								"kind": "image",
+								"type": "",
+								"name": "OL7.9-U072620",
+								"uuid": "67e7ef90-e4ad-48fb-bc35-32cc5d7d92ea"
+							},
+							"type": "",
+							"disk_size_mib": 0,
+							"volume_group_reference": null,
+							"device_properties": {
+								"type": "",
+								"disk_address": {
+									"type": "",
+									"device_index": 0,
+									"adapter_type": "SCSI"
+								},
+								"device_type": "DISK"
+							}
+						}, {
+							"data_source_reference": {
+								"kind": "image",
+								"type": "",
+								"name": "Oracle19.3c_BIN",
+								"uuid": "671108fb-1895-46ef-a5c7-927f6e9ac2e1"
+							},
+							"type": "",
+							"disk_size_mib": 0,
+							"volume_group_reference": null,
+							"device_properties": {
+								"type": "",
+								"disk_address": {
+									"type": "",
+									"device_index": 1,
+									"adapter_type": "SCSI"
+								},
+								"device_type": "DISK"
+							}
+						}]
+					},
+					"availability_zone_reference": null,
+					"backup_policy": null,
+					"type": "",
+					"cluster_reference": null,
+					"categories": ""
+				},
+				"variable_list": []
+			}],
+			"credential_definition_list": [{
+				"username": "root",
+				"description": "",
+				"type": "PASSWORD",
+				"secret": {
+					"attrs": {
+						"is_secret_modified": false,
+						"secret_reference": {}
+					}
+				},
+				"name": "root"
+			}],
+			"package_definition_list": [{
+				"description": "",
+				"action_list": [],
+				"type": "DEB",
+				"service_local_reference_list": [{
+					"kind": "app_service",
+					"name": "OracleService"
+				}],
+				"name": "OraclePackage",
+				"version": "",
+				"options": {
+					"install_runbook": {
+						"task_definition_list": [{
+							"target_any_local_reference": {
+								"kind": "app_package",
+								"name": "OraclePackage"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "67edc3b6_dag",
+							"attrs": {
+								"edges": [],
+								"type": ""
+							},
+							"timeout_secs": "0",
+							"type": "DAG",
+							"variable_list": []
+						}],
+						"description": "",
+						"name": "d965152e_runbook",
+						"main_task_local_reference": {
+							"kind": "app_task",
+							"name": "67edc3b6_dag"
+						},
+						"variable_list": []
+					},
+					"type": "",
+					"uninstall_runbook": {
+						"task_definition_list": [{
+							"target_any_local_reference": {
+								"kind": "app_package",
+								"name": "OraclePackage"
+							},
+							"retries": "0",
+							"description": "",
+							"child_tasks_local_reference_list": [],
+							"name": "b012219b_dag",
+							"attrs": {
+								"edges": [],
+								"type": ""
+							},
+							"timeout_secs": "0",
+							"type": "DAG",
+							"variable_list": []
+						}],
+						"description": "",
+						"name": "f6018538_runbook",
+						"main_task_local_reference": {
+							"kind": "app_task",
+							"name": "b012219b_dag"
+						},
+						"variable_list": []
+					}
+				},
+				"variable_list": []
+			}],
+			"app_profile_list": [{
+				"deployment_create_list": [{
+					"type": "GREENFIELD",
+					"action_list": [],
+					"name": "b6197796_deployment",
+					"min_replicas": "1",
+					"default_replicas": "1",
+					"depends_on_list": [],
+					"published_service_local_reference_list": [],
+					"max_replicas": "1",
+					"package_local_reference_list": [{
+						"kind": "app_package",
+						"name": "OraclePackage"
+					}],
+					"substrate_local_reference": {
+						"kind": "app_substrate",
+						"name": "OracleSubstrate"
+					},
+					"variable_list": [],
+					"description": ""
+				}],
+				"environment_reference_list": [],
+				"description": "",
+				"action_list": [],
+				"name": "AHV",
+				"variable_list": [{
+					"val_type": "STRING",
+					"is_mandatory": false,
+					"description": "",
+					"data_type": "BASE",
+					"type": "LOCAL",
+					"name": "HOSTNAME",
+					"value": "oraclevm",
+					"label": "",
+					"attrs": {
+						"type": ""
+					},
+					"editables": {
+						"value": true
+					},
+					"is_hidden": false
+				}, {
+					"val_type": "STRING",
+					"is_mandatory": false,
+					"description": "",
+					"data_type": "BASE",
+					"type": "SECRET",
+					"name": "ORACLE_USER_PASSWORD",
+					"value": "",
+					"label": "",
+					"attrs": {
+						"is_secret_modified": false,
+						"secret_reference": {},
+						"type": ""
+					},
+					"editables": {
+						"value": true
+					},
+					"is_hidden": false
+				}, {
+					"val_type": "STRING",
+					"is_mandatory": false,
+					"description": "",
+					"data_type": "BASE",
+					"type": "LOCAL",
+					"name": "DATABASE_NAME",
+					"value": "nutanix",
+					"label": "",
+					"attrs": {
+						"type": ""
+					},
+					"editables": {
+						"value": true
+					},
+					"is_hidden": false
+				}, {
+					"val_type": "STRING",
+					"is_mandatory": false,
+					"description": "",
+					"data_type": "BASE",
+					"type": "SECRET",
+					"name": "SYS_PASSWORD",
+					"value": "",
+					"label": "",
+					"attrs": {
+						"is_secret_modified": false,
+						"secret_reference": {},
+						"type": ""
+					},
+					"editables": {
+						"value": true
+					},
+					"is_hidden": false
+				}, {
+					"val_type": "STRING",
+					"is_mandatory": false,
+					"description": "",
+					"data_type": "BASE",
+					"type": "SECRET",
+					"name": "SYSTEM_PASSWORD",
+					"value": "",
+					"label": "",
+					"attrs": {
+						"is_secret_modified": false,
+						"secret_reference": {},
+						"type": ""
+					},
+					"editables": {
+						"value": true
+					},
+					"is_hidden": false
+				}]
+			}],
+			"published_service_definition_list": [],
+			"default_credential_local_reference": {
+				"kind": "app_credential",
+				"name": "root"
+			},
+			"type": "USER"
+		},
+		"name": "Oracle_19c - single node"
+	},
+	"api_version": "3.0",
+	"metadata": {
+		"last_update_time": "1627387501356923",
+		"kind": "blueprint",
+		"spec_version": 32,
+		"creation_time": "1627327236844206",
+		"name": "Oracle_19c - single node"
+	}
+}
